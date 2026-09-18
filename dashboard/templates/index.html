@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI SOC Dashboard</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+        }
+
+        .header {
+            padding: 25px 35px;
+            background: #111827;
+            border-bottom: 1px solid #334155;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            color: #94a3b8;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        .card h3 {
+            color: #94a3b8;
+            margin-top: 0;
+        }
+
+        .number {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .critical {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .high {
+            color: #f97316;
+            font-weight: bold;
+        }
+
+        .medium {
+            color: #eab308;
+            font-weight: bold;
+        }
+
+        .low {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .incident-header {
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 30px;
+        }
+
+        .incident-header h2 {
+            margin-top: 0;
+        }
+
+        .incident-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .info-box {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            font-weight: bold;
+        }
+
+        .status {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .scan-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .scan-button:hover {
+            background: #1d4ed8;
+        }
+
+        .alert {
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+
+        .alert-title {
+            margin-top: 0;
+        }
+
+        .section {
+            margin-top: 25px;
+            padding: 18px;
+            background: #111827;
+            border-radius: 10px;
+        }
+
+        .section h4 {
+            margin-top: 0;
+            color: #38bdf8;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: #cbd5e1;
+            font-family: Arial, sans-serif;
+        }
+
+        .knowledge {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #1e293b;
+            border-radius: 8px;
+        }
+
+        .investigation {
+            background: #111827;
+            border: 1px solid #334155;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .history {
+            margin-top: 30px;
+            background: #111827;
+            border: 1px solid #334155;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 900px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .incident-info {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <h1>🛡️ AI SOC Dashboard</h1>
+
+    <p>
+        AI-Powered Security Operations Center
+    </p>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- Incident Information -->
+
+    {% if latest_incident %}
+
+    <div class="incident-header">
+
+        <h2>🚨 Current Security Incident</h2>
+
+        <div class="incident-info">
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Incident ID
+                </div>
+
+                <div class="info-value">
+                    {{ latest_incident["incident_id"] }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Created At
+                </div>
+
+                <div class="info-value">
+                    {{ latest_incident["created_at"] }}
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Status
+                </div>
+
+                <div class="info-value status">
+                    {{ latest_incident["status"] }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a href="/run-scan"
+           class="scan-button">
+
+            🔍 Run New SOC Scan
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- Statistics -->
+
+    <div class="stats">
+
+
+        <div class="card">
+
+            <h3>Total Alerts</h3>
+
+            <div class="number">
+                {{ total_alerts }}
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Critical</h3>
+
+            <div class="number critical">
+                {{ critical }}
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>High</h3>
+
+            <div class="number high">
+                {{ high }}
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Medium</h3>
+
+            <div class="number medium">
+                {{ medium }}
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Low</h3>
+
+            <div class="number low">
+                {{ low }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Security Alerts -->
+
+    <h2>🚨 Security Alerts</h2>
+
+
+    {% for alert in alerts %}
+
+    <div class="alert">
+
+
+        <h2 class="alert-title">
+            {{ alert["threat"] }}
+        </h2>
+
+
+        {% if alert.get("ip") %}
+
+        <p>
+            <b>IP Address:</b>
+            {{ alert["ip"] }}
+        </p>
+
+        {% endif %}
+
+
+        <p>
+
+            <b>Severity:</b>
+
+            {{ alert["severity"] }}
+
+        </p>
+
+
+        <p>
+
+            <b>Risk Score:</b>
+
+            {{ alert["risk_score"] }}/100
+
+            -
+
+            <span class="{{ alert['risk_level'] | lower }}">
+
+                {{ alert["risk_level"] }}
+
+            </span>
+
+        </p>
+
+
+        <p>
+            {{ alert["description"] }}
+        </p>
+
+
+        <!-- Threat Intelligence -->
+
+        {% if alert.get("threat_intelligence") %}
+
+        <div class="section">
+
+            <h4>🌐 Threat Intelligence</h4>
+
+            <pre>{{ alert["threat_intelligence"] }}</pre>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- Security RAG -->
+
+        {% if alert.get("security_knowledge") %}
+
+        <div class="section">
+
+            <h4>📚 Security Knowledge</h4>
+
+            {% for item in alert["security_knowledge"] %}
+
+            <div class="knowledge">
+
+                <b>{{ item["file"] }}</b>
+
+                <br><br>
+
+                Relevance Score:
+                {{ item["score"] }}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- AI Analysis -->
+
+        {% if alert.get("ai_analysis") %}
+
+        <div class="section">
+
+            <h4>🤖 AI SOC Analysis</h4>
+
+            <pre>{{ alert["ai_analysis"] }}</pre>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- Response -->
+
+        {% if alert.get("response_plan") %}
+
+        <div class="section">
+
+            <h4>🛡️ Response Plan</h4>
+
+            <pre>{{ alert["response_plan"] }}</pre>
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+    {% endfor %}
+
+
+    <!-- Investigation -->
+
+    {% if latest_incident and latest_incident.get("investigation") %}
+
+    <div class="investigation">
+
+        <h2>🔎 Incident Investigation</h2>
+
+        <pre>{{ latest_incident["investigation"]["ai_report"] }}</pre>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- Incident History -->
+
+    <div class="history">
+
+        <h2>📋 Incident History</h2>
+
+        <p>
+            Total stored incidents:
+            <b>{{ incidents | length }}</b>
+        </p>
+
+
+        {% for incident in incidents | reverse %}
+
+        <div class="history-item">
+
+            <b>
+                {{ incident["incident_id"] }}
+            </b>
+
+            &nbsp; | &nbsp;
+
+            <span class="status">
+                {{ incident["status"] }}
+            </span>
+
+            <br><br>
+
+            Created:
+            {{ incident["created_at"] }}
+
+            <br>
+
+            Alerts:
+            {{ incident["alerts"] | length }}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

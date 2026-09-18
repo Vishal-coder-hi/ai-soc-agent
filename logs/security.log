@@ -1,0 +1,12 @@
+2026-09-12 10:01:21 INFO Login successful user=admin ip=192.168.1.10
+2026-09-12 10:02:11 WARNING Login failed user=admin ip=185.220.101.5
+2026-09-12 10:02:15 WARNING Login failed user=admin ip=185.220.101.5
+2026-09-12 10:02:18 WARNING Login failed user=admin ip=185.220.101.5
+2026-09-12 10:02:21 WARNING Login failed user=admin ip=185.220.101.5
+2026-09-12 10:02:25 WARNING Login failed user=admin ip=185.220.101.5
+2026-09-12 10:03:10 INFO Login successful user=admin ip=185.220.101.5
+2026-09-12 10:04:22 INFO File accessed user=admin file=/etc/passwd
+
+2026-09-12 10:05:10 WARNING Port scan detected source=10.0.0.25 ports=22,80,443,8080
+2026-09-12 10:06:15 WARNING Privilege escalation failed user=test ip=10.0.0.25
+2026-09-12 10:07:20 INFO Login successful user=vishal ip=192.168.1.20

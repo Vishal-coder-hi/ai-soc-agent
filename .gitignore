@@ -1,0 +1,25 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Private keys / certificates
+*.key
+*.pem
+keys/
+
+# Generated SOC data
+storage/results.json
+storage/incidents.json
+logs/soc_platform.log
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
